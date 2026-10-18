@@ -1,0 +1,13 @@
+{
+  "name": "kozon-linked",
+  "version": "1.0.0",
+  "private": true,
+  "description": "텔레그램 ↔ Claude Code 링크드 브릿지 + 비밀번호 링크드봇 + 알림",
+  "scripts": {
+    "bridge": "node bridge/tg_bridge.cjs",
+    "test": "node bridge/tg_bridge.cjs --selftest && node auth/tg_ask.cjs --selftest",
+    "chat-id": "node tools/get_chat_id.cjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": { "playwright": "^1.47.0" }
+}
