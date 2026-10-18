@@ -1,6 +1,7 @@
 ﻿# 링크드 설치 — 이 폴더에서:  powershell -ExecutionPolicy Bypass -File install.ps1
 #   -NoStartup : 윈도우 로그인 때 자동으로 켜지게 하지 않는다
-param([switch]$NoStartup)
+#   -NoStatus  : 상태 표시(탭 점·상태줄)를 Claude 설정에 넣지 않는다
+param([switch]$NoStartup, [switch]$NoStatus)
 $ErrorActionPreference = 'Stop'
 $Root = $PSScriptRoot
 Set-Location $Root
@@ -41,7 +42,10 @@ Ok ".env 있음"
 node bridge/tg_bridge.cjs --selftest
 node auth/tg_ask.cjs --selftest
 
-# 6) 윈도우 로그인 때 브릿지 자동 시작
+# 6) 상태 표시 (탭 점 🔴🟡🟢 · 아래 상태줄 · VS Code 탭 이름) — -NoStatus 면 건너뜀
+if (-not $NoStatus) { node status/apply_settings.cjs }
+
+# 7) 윈도우 로그인 때 브릿지 자동 시작
 if (-not $NoStartup) {
   $lnk = Join-Path ([Environment]::GetFolderPath('Startup')) '링크드 브릿지.lnk'
   $s = (New-Object -ComObject WScript.Shell).CreateShortcut($lnk)

@@ -8,6 +8,8 @@
 | ③ | **비밀번호 링크드봇** | 로그인·인증이 필요할 때 폰으로 요청 → 받은 값을 작업 크롬 로그인 칸에 넣고, 받은 글은 바로 지움 | `auth/tg_ask.cjs` |
 | ④ | **알림** | 진행·문제를 텔레그램으로 보고 | `notify/notify.cjs` |
 
+| ⑤ | **상태 표시** | 터미널 탭에 🔴 작업 중 · 🟡 에이전트만 도는 중 · 🟢 끝/봐줄 때 + 방 이름, 아래에 파란 상태줄(방 이름 · 모델) | `status/` |
+
 비밀값(봇 토큰·chat_id)은 리포에 없다. 설치하는 PC 에서 `.env` 에 넣는다.
 
 ## 설치 (새 PC, 10분)
@@ -53,6 +55,15 @@ node notify/notify.cjs text "<글 또는 파일>"
 node notify/notify.cjs photo <이미지> [캡션]
 ```
 
+**상태 표시** — `install.ps1` 이 넣어 준다. 따로 넣거나 다시 넣을 때:
+```
+node status/apply_settings.cjs --dry   # 무엇이 바뀌는지만
+node status/apply_settings.cjs         # ~/.claude/settings.json 에 훅 6개·상태줄, VS Code 탭 이름 = ${sequence}
+```
+- 고치기 전 설정은 같은 폴더에 `.bak_<날짜>` 로 남는다. 예전 `dot.cjs` 훅은 빼고 이 리포 것 하나만 둔다.
+- 도메인메이커 상태줄(`domain-config.json`)을 이미 쓰는 PC 면 상태줄은 그대로 둔다.
+- 열려 있는 Claude 창은 닫았다 다시 열면 적용된다.
+
 ## 구조
 
 ```
@@ -63,6 +74,9 @@ notify/notify.cjs        글·사진 보내기
 lib/env.cjs              리포 맨 위 .env 읽기
 lib/cdp.cjs              작업 크롬(CDP) 연결
 tools/get_chat_id.cjs    chat_id 확인
+status/dot.cjs           훅에서 불려 탭 제목에 점+방 이름 (claude.exe 콘솔에 붙어 제목 바꿈: set_title.ps1)
+status/statusline.ps1    아래 파란 상태줄
+status/apply_settings.cjs  위 둘을 Claude Code·VS Code 설정에 넣기
 install.ps1              설치·점검·시작프로그램 등록
 data/                    (자동 생성, 안 올라감) 상태 파일·기록 tg_bridge.log·받은 파일·크롬 프로필
 ```
